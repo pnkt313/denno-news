@@ -6,7 +6,7 @@
     <title>電脳新聞 縦書き電子版</title>
     <style>
         /* ==========================================================
-           1. 全体設定（PC版：50%縮小 & 縦書き）
+           1. 全体設定
            ========================================================== */
         html { font-size: 50%; }
         body { 
@@ -16,6 +16,7 @@
             margin: 0; 
             padding: 0; 
             writing-mode: vertical-rl; 
+            -webkit-writing-mode: vertical-rl;
             height: 100vh; 
             display: flex;
             flex-direction: row; 
@@ -69,7 +70,7 @@
            ========================================================== */
         main { 
             display: grid; 
-            grid-template-rows: repeat(2, 1fr); /* 2段に設定 */
+            grid-template-rows: repeat(2, 1fr); 
             grid-auto-flow: column; 
             gap: 35px; 
             padding: 80px 30px 30px 30px; 
@@ -80,7 +81,7 @@
         }
         
         article { 
-            height: 420px; /* 1行の長さ */
+            height: 420px; 
             width: auto; 
             min-width: 300px; 
             border-left: 1px solid #999; 
@@ -88,6 +89,8 @@
             display: flex; 
             flex-direction: column; 
             position: relative; 
+            writing-mode: vertical-rl;
+            -webkit-writing-mode: vertical-rl;
         }
 
         article::after { 
@@ -109,36 +112,42 @@
             background: linear-gradient(to bottom, rgba(0,0,0,0.05), transparent); 
             padding: 10px 5px; 
             border-right: 3px solid #a00; 
+            /* 見出しは常に縦書き */
+            writing-mode: vertical-rl;
+            -webkit-writing-mode: vertical-rl;
         }
 
-.content { 
-    font-size: 2.0rem; 
-    line-height: 1.7; 
-    text-align: justify; 
-    overflow: hidden; 
-    display: -webkit-box; 
-    -webkit-line-clamp: 24; 
-    -webkit-box-orient: vertical; 
-
-    /* --- ↓↓↓ ここから強力なバグ対策を追加 ↓↓↓ --- */
-    writing-mode: vertical-rl !important; /* 強制的に縦書き */
-    -webkit-writing-mode: vertical-rl !important; /* Safari用 */
-    
-    text-orientation: mixed !important; /* 文字の向きを安定させる */
-    -webkit-text-orientation: mixed !important;
-    
-    text-combine-upright: none !important; /* 縦中横を無効化 */
-}
+        /* ==========================================================
+           【最重要】バグ対策済みの本文設定
+           ========================================================== */
+        .content { 
+            font-size: 2.0rem; 
+            line-height: 1.7; 
+            text-align: justify; 
+            
+            /* 横書きを強制する古いコード (-webkit-box) を完全に排除 */
+            display: block !important;
+            
+            /* 縦書きを強制 */
+            writing-mode: vertical-rl !important;
+            -webkit-writing-mode: vertical-rl !important;
+            text-orientation: mixed !important;
+            -webkit-text-orientation: mixed !important;
+            
+            overflow: hidden; 
+            height: 100%;
+        }
         
         a.article-link { text-decoration: none; color: inherit; display: block; height: 100%; transition: 0.3s; }
         a:hover { background-color: rgba(255,255,255,0.4); }
 
         /* ==========================================================
-           3. スマホ用設定（画面幅768px以下：1x6 垂直並び）
+           3. スマホ用設定（1x6 垂直並び）
            ========================================================== */
         @media (max-width: 768px) {
             body {
-                writing-mode: horizontal-tb; /* 全体は上下スワイプ用に横書きモードへ */
+                writing-mode: horizontal-tb; 
+                -webkit-writing-mode: horizontal-tb;
                 height: auto;
                 overflow-y: auto;
                 overflow-x: hidden;
@@ -147,33 +156,35 @@
 
             main {
                 display: flex;
-                flex-direction: column; /* 記事を縦に並べる */
+                flex-direction: column; 
                 padding: 70px 15px 20px 15px;
                 height: auto;
                 gap: 50px;
             }
 
             article {
-/* ▼▼▼ スマホブラウザへの強力な指示を追加 ▼▼▼ */
-        writing-mode: vertical-rl !important; 
-        -webkit-writing-mode: vertical-rl !important;
-        
-        display: block !important; /* Flexを解除して安定させる */
-        /* ▲▲▲ ここまで ▲▲▲ */
-                height: 450px; /* スマホでの1行の長さ */
+                writing-mode: vertical-rl !important; 
+                -webkit-writing-mode: vertical-rl !important;
+                height: 450px; 
                 width: 100%;
                 min-width: 0;
-                overflow-x: auto; /* 長い記事は横スクロール可能に */
+                overflow-x: auto; 
                 overflow-y: hidden;
                 border-left: none;
                 border-right: 3px solid #a00;
                 padding: 0 15px 0 0;
                 margin: 0;
                 background: rgba(255,255,255,0.2);
+                display: block !important;
             }
 
             h2 { font-size: 2.6rem; }
-            .content { font-size: 1.8rem; -webkit-line-clamp: 15; }
+            
+            .content { 
+                font-size: 1.8rem; 
+                /* スマホでも行数制限を使わず、高さを固定して溢れさせる */
+                height: 320px; 
+            }
 
             article::after {
                 bottom: -25px;
