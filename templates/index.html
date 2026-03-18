@@ -2,90 +2,176 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>電脳新聞 縦書き電子版</title>
     <style>
+        /* ==========================================================
+           1. 全体設定（PC版：50%縮小 & 縦書き）
+           ========================================================== */
         html { font-size: 50%; }
         body { 
             background-color: #f0ede4; 
             color: #222; 
             font-family: "Yu Mincho", "MS PMincho", serif; 
-            margin: 0; padding: 0; 
+            margin: 0; 
+            padding: 0; 
             writing-mode: vertical-rl; 
             height: 100vh; 
-            display: flex; flex-direction: row; 
+            display: flex;
+            flex-direction: row; 
         }
 
-        /* ヘッダー・タブ */
+        /* ヘッダー・タブメニュー（横書き固定） */
         nav {
             writing-mode: horizontal-tb; 
-            position: fixed; top: 0; left: 0; width: 100%;
-            background-color: #333; display: flex; align-items: center;
-            padding: 0 20px; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #333;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             box-sizing: border-box;
         }
-        nav .brand { color: #fff; font-size: 1.8rem; font-weight: 900; letter-spacing: 0.2rem; margin-right: 30px; }
-        nav .menu { display: flex; justify-content: center; gap: 1px; flex-grow: 1; }
-        nav .menu a { text-decoration: none; color: #eee; font-size: 1.6rem; padding: 12px 20px; background-color: #444; }
+
+        nav .brand {
+            color: #fff;
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: 0.2rem;
+            margin-right: 30px;
+        }
+
+        nav .menu {
+            display: flex;
+            justify-content: center;
+            gap: 1px;
+            flex-grow: 1;
+        }
+
+        nav .menu a {
+            text-decoration: none;
+            color: #eee;
+            font-size: 1.6rem;
+            padding: 12px 20px;
+            background-color: #444;
+            transition: 0.2s;
+            font-family: sans-serif;
+        }
+
         nav .menu a.active { background-color: #a00; color: #fff; font-weight: bold; }
 
-        /* 紙面レイアウト */
+        /* ==========================================================
+           2. 紙面レイアウト（PC版：2段×3列）
+           ========================================================== */
         main { 
             display: grid; 
-            grid-template-rows: repeat(2, 1fr); 
+            grid-template-rows: repeat(2, 1fr); /* 2段に設定 */
             grid-auto-flow: column; 
-            gap: 35px; /* 記事の間隔を少し広げて優雅に */
+            gap: 35px; 
             padding: 80px 30px 30px 30px; 
-            height: 100vh; box-sizing: border-box;
+            height: 100vh; 
+            box-sizing: border-box;
             overflow-x: auto;
             border-right: 1px solid #ccc;
         }
         
         article { 
-            height: 380px; /* 一行を少し長く（約22-25文字） */
+            height: 420px; /* 1行の長さ */
             width: auto; 
             min-width: 300px; 
             border-left: 1px solid #999; 
             padding-left: 20px; 
-            display: flex; flex-direction: column; position: relative; 
+            display: flex; 
+            flex-direction: column; 
+            position: relative; 
         }
 
-        /* 記事下の点線 */
         article::after { 
-            content: ""; position: absolute; bottom: -15px; right: 0; width: 100%; 
+            content: ""; 
+            position: absolute; 
+            bottom: -15px; 
+            right: 0; 
+            width: 100%; 
             border-bottom: 1px dotted #bbb; 
         }
 
         .meta { font-size: 1.1rem; color: #777; margin-bottom: 8px; font-family: sans-serif; }
 
         h2 { 
-            font-size: 3.0rem; line-height: 1.25; margin: 0 0 15px 0; font-weight: 800; 
-            background: linear-gradient(to bottom, rgba(0,0,0,0.05), transparent); /* 見出しに微かな影 */
+            font-size: 3.0rem; 
+            line-height: 1.25; 
+            margin: 0 0 15px 0; 
+            font-weight: 800; 
+            background: linear-gradient(to bottom, rgba(0,0,0,0.05), transparent); 
             padding: 10px 5px; 
-            border-right: 3px solid #a00; /* 見出しの横にアクセントの赤い縦線 */
+            border-right: 3px solid #a00; 
         }
 
         .content { 
-            font-size: 2.0rem;
-            line-height: 1.7;
-            text-align: justify;
-
-            /* ▼▼▼ スマホでのバグ修正のための追加 ▼▼▼ */
-        writing-mode: vertical-rl; /* ここでも縦書きを明示 */
-        text-combine-upright: none; /* 縦中横を無効化 */
-        -webkit-text-orientation: mixed; /* 文字の向きを安定させる */
-        text-orientation: mixed;
-        /* ▲▲▲ ここまで ▲▲▲ */
-            
-            overflow: hidden;
-            
-            display: -webkit-box;
-            -webkit-line-clamp: 24;
+            font-size: 2.0rem; 
+            line-height: 1.7; 
+            text-align: justify; 
+            overflow: hidden; 
+            display: -webkit-box; 
+            -webkit-line-clamp: 24; 
             -webkit-box-orient: vertical; 
+            
+            /* スマホ等での文字回転バグ対策 */
+            writing-mode: vertical-rl;
+            text-combine-upright: none;
+            -webkit-text-orientation: mixed;
+            text-orientation: mixed;
         }
         
         a.article-link { text-decoration: none; color: inherit; display: block; height: 100%; transition: 0.3s; }
-        a:hover { background-color: rgba(255,255,255,0.4); opacity: 0.8; }
+        a:hover { background-color: rgba(255,255,255,0.4); }
 
+        /* ==========================================================
+           3. スマホ用設定（画面幅768px以下：1x6 垂直並び）
+           ========================================================== */
+        @media (max-width: 768px) {
+            body {
+                writing-mode: horizontal-tb; /* 全体は上下スワイプ用に横書きモードへ */
+                height: auto;
+                overflow-y: auto;
+                overflow-x: hidden;
+                display: block;
+            }
+
+            main {
+                display: flex;
+                flex-direction: column; /* 記事を縦に並べる */
+                padding: 70px 15px 20px 15px;
+                height: auto;
+                gap: 50px;
+            }
+
+            article {
+                writing-mode: vertical-rl; /* 記事の中身だけ縦書きを維持 */
+                height: 450px; /* スマホでの1行の長さ */
+                width: 100%;
+                min-width: 0;
+                overflow-x: auto; /* 長い記事は横スクロール可能に */
+                overflow-y: hidden;
+                border-left: none;
+                border-right: 3px solid #a00;
+                padding: 0 15px 0 0;
+                margin: 0;
+                background: rgba(255,255,255,0.2);
+            }
+
+            h2 { font-size: 2.6rem; }
+            .content { font-size: 1.8rem; -webkit-line-clamp: 15; }
+
+            article::after {
+                bottom: -25px;
+                border-bottom: 1px solid #ccc;
+            }
+        }
     </style>
 </head>
 <body>
