@@ -65,8 +65,22 @@
         }
 
         .content { 
-            font-size: 2.0rem; line-height: 1.7; text-align: justify; overflow: hidden; 
-            display: -webkit-box; -webkit-line-clamp: 24; -webkit-box-orient: vertical; 
+            font-size: 2.0rem;
+            line-height: 1.7;
+            text-align: justify;
+
+            /* ▼▼▼ スマホでのバグ修正のための追加 ▼▼▼ */
+        writing-mode: vertical-rl; /* ここでも縦書きを明示 */
+        text-combine-upright: none; /* 縦中横を無効化 */
+        -webkit-text-orientation: mixed; /* 文字の向きを安定させる */
+        text-orientation: mixed;
+        /* ▲▲▲ ここまで ▲▲▲ */
+            
+            overflow: hidden;
+            
+            display: -webkit-box;
+            -webkit-line-clamp: 24;
+            -webkit-box-orient: vertical; 
         }
         
         a.article-link { text-decoration: none; color: inherit; display: block; height: 100%; transition: 0.3s; }
