@@ -33,7 +33,7 @@ def remove_html_tags(text):
 def fetch_article_content(entry):
     config = Config()
     config.browser_user_agent = "Mozilla/5.0 (Windows NT 10.0...)" # 略
-    config.request_timeout = 8
+    config.request_timeout = 5
 
     try:
         article = Article(entry.link, config=config)
@@ -66,7 +66,7 @@ def index():
     rss_url = CATEGORIES.get(cat_key, CATEGORIES['top'])
     
     feed = feedparser.parse(rss_url)
-    raw_entries = feed.entries[:15]
+    raw_entries = feed.entries[:6]
     
     with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
         entries = list(executor.map(fetch_article_content, raw_entries))
