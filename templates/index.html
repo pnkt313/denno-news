@@ -22,58 +22,65 @@
             flex-direction: row; 
         }
 
-        /* ヘッダー・タブメニュー（横書き固定） */
+        /* ==========================================================
+           2. スリムな横スクロールメニュー（スマートニュース風）
+           ========================================================== */
         nav {
             writing-mode: horizontal-tb; 
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            background-color: #333;
-            display: flex;
-            align-items: center;
-            padding: 0 20px;
+            background-color: #fff; /* 白背景で清潔感 */
+            display: block;
+            padding: 0;
             z-index: 1000;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             box-sizing: border-box;
+            border-bottom: 1px solid #ddd;
         }
 
-        nav .brand {
-            color: #fff;
-            font-size: 1.8rem;
-            font-weight: 900;
-            letter-spacing: 0.2rem;
-            margin-right: 30px;
-        }
+        /* ロゴはスマホでは邪魔なので非表示、または極小 */
+        nav .brand { display: none; }
 
         nav .menu {
             display: flex;
-            justify-content: center;
-            gap: 1px;
-            flex-grow: 1;
+            overflow-x: auto; /* 横にスワイプ可能に */
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none; /* Firefox用 */
         }
+
+        nav .menu::-webkit-scrollbar { display: none; /* Chrome/Safari用 */ }
 
         nav .menu a {
             text-decoration: none;
-            color: #eee;
-            font-size: 1.6rem;
-            padding: 12px 20px;
-            background-color: #444;
+            color: #666;
+            font-size: 1.4rem; /* 文字を小さくスマートに */
+            padding: 12px 18px;
+            background-color: transparent;
+            display: inline-block;
             transition: 0.2s;
             font-family: sans-serif;
+            border-bottom: 3px solid transparent;
         }
 
-        nav .menu a.active { background-color: #a00; color: #fff; font-weight: bold; }
+        /* 選択中のタブ：赤い下線を表示 */
+        nav .menu a.active {
+            color: #a00;
+            font-weight: bold;
+            border-bottom: 3px solid #a00;
+        }
 
         /* ==========================================================
-           2. 紙面レイアウト（PC版：2段×3列）
+           3. 紙面レイアウト（PC版：2段×3列）
            ========================================================== */
         main { 
             display: grid; 
             grid-template-rows: repeat(2, 1fr); 
             grid-auto-flow: column; 
             gap: 35px; 
-            padding: 80px 30px 30px 30px; 
+            padding: 60px 30px 30px 30px; /* メニューが細くなったので上部余白を削減 */
             height: 100vh; 
             box-sizing: border-box;
             overflow-x: auto;
@@ -112,28 +119,19 @@
             background: linear-gradient(to bottom, rgba(0,0,0,0.05), transparent); 
             padding: 10px 5px; 
             border-right: 3px solid #a00; 
-            /* 見出しは常に縦書き */
             writing-mode: vertical-rl;
             -webkit-writing-mode: vertical-rl;
         }
 
-        /* ==========================================================
-           【最重要】バグ対策済みの本文設定
-           ========================================================== */
         .content { 
             font-size: 2.0rem; 
             line-height: 1.7; 
             text-align: justify; 
-            
-            /* 横書きを強制する古いコード (-webkit-box) を完全に排除 */
             display: block !important;
-            
-            /* 縦書きを強制 */
             writing-mode: vertical-rl !important;
             -webkit-writing-mode: vertical-rl !important;
             text-orientation: mixed !important;
             -webkit-text-orientation: mixed !important;
-            
             overflow: hidden; 
             height: 100%;
         }
@@ -142,7 +140,7 @@
         a:hover { background-color: rgba(255,255,255,0.4); }
 
         /* ==========================================================
-           3. スマホ用設定（1x6 垂直並び）
+           4. スマホ用設定（1x6 垂直並び）
            ========================================================== */
         @media (max-width: 768px) {
             body {
@@ -157,7 +155,7 @@
             main {
                 display: flex;
                 flex-direction: column; 
-                padding: 70px 15px 20px 15px;
+                padding: 55px 15px 20px 15px; /* メニューの高さに最適化 */
                 height: auto;
                 gap: 50px;
             }
@@ -179,12 +177,7 @@
             }
 
             h2 { font-size: 2.6rem; }
-            
-            .content { 
-                font-size: 1.8rem; 
-                /* スマホでも行数制限を使わず、高さを固定して溢れさせる */
-                height: 320px; 
-            }
+            .content { font-size: 1.8rem; height: 320px; }
 
             article::after {
                 bottom: -25px;
@@ -196,7 +189,6 @@
 <body>
 
 <nav>
-    <div class="brand">電脳新聞</div>
     <div class="menu">
         <a href="/?cat=top" class="{% if current_cat == 'top' %}active{% endif %}">トップ</a>
         <a href="/?cat=japan" class="{% if current_cat == 'japan' %}active{% endif %}">日本</a>
