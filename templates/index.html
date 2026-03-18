@@ -111,21 +111,24 @@
             border-right: 3px solid #a00; 
         }
 
-        .content { 
-            font-size: 2.0rem; 
-            line-height: 1.7; 
-            text-align: justify; 
-            overflow: hidden; 
-            display: -webkit-box; 
-            -webkit-line-clamp: 24; 
-            -webkit-box-orient: vertical; 
-            
-            /* スマホ等での文字回転バグ対策 */
-            writing-mode: vertical-rl;
-            text-combine-upright: none;
-            -webkit-text-orientation: mixed;
-            text-orientation: mixed;
-        }
+.content { 
+    font-size: 2.0rem; 
+    line-height: 1.7; 
+    text-align: justify; 
+    overflow: hidden; 
+    display: -webkit-box; 
+    -webkit-line-clamp: 24; 
+    -webkit-box-orient: vertical; 
+
+    /* --- ↓↓↓ ここから強力なバグ対策を追加 ↓↓↓ --- */
+    writing-mode: vertical-rl !important; /* 強制的に縦書き */
+    -webkit-writing-mode: vertical-rl !important; /* Safari用 */
+    
+    text-orientation: mixed !important; /* 文字の向きを安定させる */
+    -webkit-text-orientation: mixed !important;
+    
+    text-combine-upright: none !important; /* 縦中横を無効化 */
+}
         
         a.article-link { text-decoration: none; color: inherit; display: block; height: 100%; transition: 0.3s; }
         a:hover { background-color: rgba(255,255,255,0.4); }
@@ -151,7 +154,12 @@
             }
 
             article {
-                writing-mode: vertical-rl; /* 記事の中身だけ縦書きを維持 */
+/* ▼▼▼ スマホブラウザへの強力な指示を追加 ▼▼▼ */
+        writing-mode: vertical-rl !important; 
+        -webkit-writing-mode: vertical-rl !important;
+        
+        display: block !important; /* Flexを解除して安定させる */
+        /* ▲▲▲ ここまで ▲▲▲ */
                 height: 450px; /* スマホでの1行の長さ */
                 width: 100%;
                 min-width: 0;
