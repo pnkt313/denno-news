@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>電脳新聞 縦書き電子版</title>
+    <title>網上瓦版</title>
     <style>
         /* ==========================================================
            1. 全体設定
@@ -23,7 +23,7 @@
         }
 
         /* ==========================================================
-           2. スリムな横スクロールメニュー（スマートニュース風）
+           2. スリムな横スクロールメニュー（網上瓦版ロゴ入り）
            ========================================================== */
         nav {
             writing-mode: horizontal-tb; 
@@ -31,8 +31,9 @@
             top: 0;
             left: 0;
             width: 100%;
-            background-color: #fff; /* 白背景で清潔感 */
-            display: block;
+            background-color: #fff; 
+            display: flex; /* ロゴとメニューを横に並べる */
+            align-items: center;
             padding: 0;
             z-index: 1000;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
@@ -40,23 +41,35 @@
             border-bottom: 1px solid #ddd;
         }
 
-        /* ロゴはスマホでは邪魔なので非表示、または極小 */
-        nav .brand { display: none; }
-
-        nav .menu {
-            display: flex;
-            overflow-x: auto; /* 横にスワイプ可能に */
+        /* 左側に固定されるロゴ */
+        nav .brand {
+            display: inline-block;
+            color: #a00; /* 瓦版らしい赤 */
+            font-size: 1.6rem;
+            font-weight: 900;
+            padding: 10px 15px;
             white-space: nowrap;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none; /* Firefox用 */
+            font-family: "Yu Mincho", serif;
+            border-right: 1px solid #eee; /* メニューとの区切り線 */
+            background-color: #fff;
         }
 
-        nav .menu::-webkit-scrollbar { display: none; /* Chrome/Safari用 */ }
+        /* 右側のスクロールするメニュー */
+        nav .menu {
+            display: flex;
+            overflow-x: auto; 
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            flex-grow: 1; /* 残りの幅をすべて使う */
+        }
+
+        nav .menu::-webkit-scrollbar { display: none; }
 
         nav .menu a {
             text-decoration: none;
             color: #666;
-            font-size: 1.4rem; /* 文字を小さくスマートに */
+            font-size: 1.4rem;
             padding: 12px 18px;
             background-color: transparent;
             display: inline-block;
@@ -65,7 +78,6 @@
             border-bottom: 3px solid transparent;
         }
 
-        /* 選択中のタブ：赤い下線を表示 */
         nav .menu a.active {
             color: #a00;
             font-weight: bold;
@@ -73,14 +85,14 @@
         }
 
         /* ==========================================================
-           3. 紙面レイアウト（PC版：2段×3列）
+           3. 紙面レイアウト（PC版）
            ========================================================== */
         main { 
             display: grid; 
             grid-template-rows: repeat(2, 1fr); 
             grid-auto-flow: column; 
             gap: 35px; 
-            padding: 60px 30px 30px 30px; /* メニューが細くなったので上部余白を削減 */
+            padding: 65px 30px 30px 30px; 
             height: 100vh; 
             box-sizing: border-box;
             overflow-x: auto;
@@ -124,7 +136,7 @@
         }
 
         .content { 
-            font-size: 2.4rem; 
+            font-size: 2.4rem; /* 文字サイズを大きく設定 */
             line-height: 1.7; 
             text-align: justify; 
             display: block !important;
@@ -140,8 +152,8 @@
         a:hover { background-color: rgba(255,255,255,0.4); }
 
         /* ==========================================================
-           4. スマホ用設定（1x6 垂直並び）
-           ========================================================== */
+           4. スマホ用設定
+           ========================================================= */
         @media (max-width: 768px) {
             body {
                 writing-mode: horizontal-tb; 
@@ -155,7 +167,7 @@
             main {
                 display: flex;
                 flex-direction: column; 
-                padding: 55px 15px 20px 15px; /* メニューの高さに最適化 */
+                padding: 60px 15px 20px 15px;
                 height: auto;
                 gap: 50px;
             }
@@ -163,7 +175,7 @@
             article {
                 writing-mode: vertical-rl !important; 
                 -webkit-writing-mode: vertical-rl !important;
-                height: 450px; 
+                height: 450px !important; /* 高さを揃える設定 */
                 width: 100%;
                 min-width: 0;
                 overflow-x: auto; 
@@ -176,10 +188,8 @@
                 display: block !important;
             }
 
-            h2 { font-size: 2.6rem; }
-            .content { 
-                font-size: 2.1rem;
-                height: 450px; }
+            h2 { font-size: 2.6rem; height: 450px !important; margin: 0 !important; }
+            .content { font-size: 2.1rem; height: 450px !important; margin: 0 !important; padding: 0 10px; }
 
             article::after {
                 bottom: -25px;
@@ -191,6 +201,7 @@
 <body>
 
 <nav>
+    <div class="brand">網上瓦版</div>
     <div class="menu">
         <a href="/?cat=top" class="{% if current_cat == 'top' %}active{% endif %}">トップ</a>
         <a href="/?cat=japan" class="{% if current_cat == 'japan' %}active{% endif %}">日本</a>
