@@ -44,7 +44,7 @@ def fetch_article_content(entry):
         article = Article(entry.link, config=config)
         article.download()
         article.parse()
-        content = article.text[:800].replace('\n', '<br>')
+        content = article.text[:400].replace('\n', '<br>')
         
         # ゴミ取り
         if content.startswith('GE'):
