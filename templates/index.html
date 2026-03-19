@@ -43,11 +43,16 @@
             padding: 65px 30px 120px 30px; height: 100vh; 
             box-sizing: border-box; overflow-x: auto;
         }
-        article { 
-            height: 420px; min-width: 300px; border-left: 1px solid #999; 
-            padding-left: 155px; /* 画像用の余白 */
-            display: flex; flex-direction: column; position: relative; 
-        }
+/* おすすめの調整：記事の左側の余白を消してスッキリさせる */
+article { 
+    height: 420px; 
+    min-width: 300px; 
+    border-left: 1px solid #999; 
+    padding-left: 20px; /* 画像用スペースを20px程度に戻す */
+    display: flex; 
+    flex-direction: column; 
+    position: relative; 
+}
         .meta { font-size: 1.4rem; color: #444; margin-bottom: 12px; font-weight: bold; }
         
         .article-image {
