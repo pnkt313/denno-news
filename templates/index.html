@@ -31,7 +31,7 @@
         }
 
         /* ==========================================================
-           2. スリムなメニュー
+           2. スリムなメニュー（ロゴ固定・横スクロール）
            ========================================================== */
         nav {
             writing-mode: horizontal-tb; 
@@ -97,7 +97,7 @@
             height: 420px; 
             min-width: 300px; 
             border-left: 1px solid #999; 
-            padding-left: 20px; 
+            padding-left: 155px; /* 画像用のスペースを確保 */
             display: flex; 
             flex-direction: column; 
             position: relative; 
@@ -111,6 +111,27 @@
             margin-bottom: 12px; 
             font-weight: bold; 
             font-family: sans-serif; 
+        }
+
+        /* 記事画像（小窓風）のスタイル */
+        .article-image {
+            writing-mode: horizontal-tb;
+            position: absolute;
+            top: 65px;
+            left: 20px;
+            width: 120px;
+            height: 90px;
+            overflow: hidden;
+            border: 2px solid #ccc;
+            background-color: #fff;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .article-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: sepia(40%); /* 瓦版らしいレトロ感 */
         }
 
         h2 { 
@@ -189,9 +210,16 @@
                 display: block !important;
                 border-left: none;
                 border-right: 3px solid #a00;
-                padding: 0 15px 0 0;
+                padding: 0 15px 0 140px; /* 左側に画像用の余白 */
                 overflow-x: auto;
                 overflow-y: hidden;
+            }
+
+            .article-image {
+                top: 40px;
+                left: 10px;
+                width: 110px;
+                height: 80px;
             }
 
             h2 { 
@@ -234,6 +262,13 @@
     <article>
         <a href="{{ entry.link }}" target="_blank" class="article-link">
             <div class="meta">{{ entry.published }}</div>
+            
+            {% if entry.top_image_url %}
+            <div class="article-image">
+                <img src="{{ entry.top_image_url }}" alt="記事画像">
+            </div>
+            {% endif %}
+
             <h2>{{ entry.title }}</h2>
             <div class="content">
                 {{ entry.content | safe }}
@@ -246,7 +281,7 @@
 <footer>
     <div class="banner-slot">
         <a href="https://amzn.to/4se5ZlG" target="_blank" rel="noopener noreferrer" style="display: block; width: 100%; height: 100%;">
-            <img src="https://m.media-amazon.com/images/G/09/2026/x-site/SS_HVE2/n7QRJu4/03_ccm/SS26_Final_CCM_007_LUDO_DisplayAds_DTMB_1200x628.jpg" 
+           <img src="https://m.media-amazon.com/images/G/09/2026/x-site/SS_HVE2/n7QRJu4/03_ccm/SS26_Final_CCM_007_LUDO_DisplayAds_DTMB_1200x628.jpg" 
                  alt="広告バナー" 
                  style="max-height: 100%; width: auto; display: block; margin: 0 auto;">
         </a>
