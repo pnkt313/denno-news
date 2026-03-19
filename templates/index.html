@@ -1,9 +1,20 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-JWK7G9KJRR"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-JWK7G9KJRR');
+</script>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>網上瓦版</title>
+    <title>網上瓦版 - 縦書き電子版</title>
     <style>
         /* ==========================================================
            1. 全体設定
@@ -23,180 +34,103 @@
         }
 
         /* ==========================================================
-           2. スリムな横スクロールメニュー（網上瓦版ロゴ入り）
+           2. スリムなメニュー（ロゴ固定）
            ========================================================== */
         nav {
             writing-mode: horizontal-tb; 
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
+            top: 0; left: 0; width: 100%;
             background-color: #fff; 
-            display: flex; /* ロゴとメニューを横に並べる */
-            align-items: center;
-            padding: 0;
+            display: flex; align-items: center;
             z-index: 1000;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            box-sizing: border-box;
             border-bottom: 1px solid #ddd;
         }
 
-        /* 左側に固定されるロゴ */
         nav .brand {
-            display: inline-block;
-            color: #a00; /* 瓦版らしい赤 */
-            font-size: 1.6rem;
-            font-weight: 900;
-            padding: 10px 15px;
-            white-space: nowrap;
-            font-family: "Yu Mincho", serif;
-            border-right: 1px solid #eee; /* メニューとの区切り線 */
-            background-color: #fff;
+            color: #a00; font-size: 1.6rem; font-weight: 900;
+            padding: 10px 15px; white-space: nowrap;
+            border-right: 1px solid #eee; font-family: "Yu Mincho", serif;
         }
 
-        /* 右側のスクロールするメニュー */
         nav .menu {
-            display: flex;
-            overflow-x: auto; 
-            white-space: nowrap;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-            flex-grow: 1; /* 残りの幅をすべて使う */
+            display: flex; overflow-x: auto; white-space: nowrap;
+            -webkit-overflow-scrolling: touch; flex-grow: 1;
         }
-
         nav .menu::-webkit-scrollbar { display: none; }
-
         nav .menu a {
-            text-decoration: none;
-            color: #666;
-            font-size: 1.4rem;
-            padding: 12px 18px;
-            background-color: transparent;
-            display: inline-block;
-            transition: 0.2s;
-            font-family: sans-serif;
-            border-bottom: 3px solid transparent;
+            text-decoration: none; color: #666; font-size: 1.4rem;
+            padding: 12px 18px; border-bottom: 3px solid transparent;
         }
-
-        nav .menu a.active {
-            color: #a00;
-            font-weight: bold;
-            border-bottom: 3px solid #a00;
-        }
+        nav .menu a.active { color: #a00; font-weight: bold; border-bottom: 3px solid #a00; }
 
         /* ==========================================================
            3. 紙面レイアウト（PC版）
            ========================================================== */
         main { 
-            display: grid; 
-            grid-template-rows: repeat(2, 1fr); 
-            grid-auto-flow: column; 
-            gap: 35px; 
-            padding: 65px 30px 30px 30px; 
-            height: 100vh; 
-            box-sizing: border-box;
+            display: grid; grid-template-rows: repeat(2, 1fr); 
+            grid-auto-flow: column; gap: 35px; 
+            padding: 65px 30px 120px 30px; /* 下部にバナー用の余白を追加 */
+            height: 100vh; box-sizing: border-box;
             overflow-x: auto;
-            border-right: 1px solid #ccc;
         }
         
         article { 
-            height: 420px; 
-            width: auto; 
-            min-width: 300px; 
-            border-left: 1px solid #999; 
-            padding-left: 20px; 
-            display: flex; 
-            flex-direction: column; 
-            position: relative; 
-            writing-mode: vertical-rl;
-            -webkit-writing-mode: vertical-rl;
+            height: 420px; min-width: 300px; 
+            border-left: 1px solid #999; padding-left: 20px; 
+            display: flex; flex-direction: column; position: relative; 
         }
 
-        article::after { 
-            content: ""; 
-            position: absolute; 
-            bottom: -15px; 
-            right: 0; 
-            width: 100%; 
-            border-bottom: 1px dotted #bbb; 
+        /* 日時（.meta）の設定：大きく強調 */
+        .meta { 
+            font-size: 1.4rem; color: #444; margin-bottom: 12px; 
+            font-weight: bold; font-family: sans-serif; letter-spacing: 0.05rem;
         }
 
-        .meta { font-size: 1.4rem;
-               color: #777; margin-bottom: 10px; font-family: sans-serif; }
-
-        h2 { 
-            font-size: 3.0rem; 
-            line-height: 1.25; 
-            margin: 0 0 15px 0; 
-            font-weight: 800; 
-            background: linear-gradient(to bottom, rgba(0,0,0,0.05), transparent); 
-            padding: 10px 5px; 
-            border-right: 3px solid #a00; 
-            writing-mode: vertical-rl;
-            -webkit-writing-mode: vertical-rl;
-        }
-
-        .content { 
-            font-size: 2.4rem; /* 文字サイズを大きく設定 */
-            line-height: 1.7; 
-            text-align: justify; 
-            display: block !important;
-            writing-mode: vertical-rl !important;
-            -webkit-writing-mode: vertical-rl !important;
-            text-orientation: mixed !important;
-            -webkit-text-orientation: mixed !important;
-            overflow: hidden; 
-            height: 100%;
-        }
-        
-        a.article-link { text-decoration: none; color: inherit; display: block; height: 100%; transition: 0.3s; }
-        a:hover { background-color: rgba(255,255,255,0.4); }
+        h2 { font-size: 3.0rem; line-height: 1.25; border-right: 3px solid #a00; padding: 10px 5px; }
+        .content { font-size: 2.4rem; line-height: 1.7; display: block !important; overflow: hidden; height: 100%; }
 
         /* ==========================================================
-           4. スマホ用設定
+           4. フッターバナーエリア（横長）
+           ========================================================== */
+        footer {
+            writing-mode: horizontal-tb;
+            position: fixed;
+            bottom: 0; left: 0; width: 100%;
+            background-color: #eee; /* バナーが目立つように薄いグレー */
+            padding: 10px 0;
+            display: flex; justify-content: center; align-items: center;
+            z-index: 1000;
+            border-top: 1px solid #ccc;
+        }
+
+        .banner-slot {
+            width: 728px; /* 標準的なビッグバナーサイズ */
+            max-width: 95%;
+            height: 90px;
+            background-color: #ddd;
+            display: flex; justify-content: center; align-items: center;
+            color: #888; font-size: 1.2rem;
+            border: 1px dashed #bbb;
+        }
+
+        /* ==========================================================
+           5. スマホ用設定
            ========================================================= */
         @media (max-width: 768px) {
-            body {
-                writing-mode: horizontal-tb; 
-                -webkit-writing-mode: horizontal-tb;
-                height: auto;
-                overflow-y: auto;
-                overflow-x: hidden;
-                display: block;
+            body { writing-mode: horizontal-tb; height: auto; display: block; }
+            main { 
+                display: flex; flex-direction: column; 
+                padding: 60px 15px 120px 15px; /* 下部余白 */
+                height: auto; gap: 50px; 
             }
+            article { height: 450px !important; border-right: 3px solid #a00; border-left: none; }
+            h2 { font-size: 2.6rem; height: 450px !important; }
+            .content { font-size: 2.1rem; height: 450px !important; }
 
-            main {
-                display: flex;
-                flex-direction: column; 
-                padding: 60px 15px 20px 15px;
-                height: auto;
-                gap: 50px;
-            }
-
-            article {
-                writing-mode: vertical-rl !important; 
-                -webkit-writing-mode: vertical-rl !important;
-                height: 450px !important; /* 高さを揃える設定 */
-                width: 100%;
-                min-width: 0;
-                overflow-x: auto; 
-                overflow-y: hidden;
-                border-left: none;
-                border-right: 3px solid #a00;
-                padding: 0 15px 0 0;
-                margin: 0;
-                background: rgba(255,255,255,0.2);
-                display: block !important;
-            }
-
-            h2 { font-size: 2.6rem; height: 450px !important; margin: 0 !important; }
-            .content { font-size: 2.1rem; 
-                      height: 450px !important; margin: 0 !important; padding: 0 10px; }
-
-            article::after {
-                bottom: -25px;
-                border-bottom: 1px solid #ccc;
-            }
+            /* スマホ用バナーサイズ調整 */
+            .banner-slot { height: 60px; font-size: 1.0rem; }
+            footer { padding: 5px 0; }
         }
     </style>
 </head>
@@ -219,7 +153,7 @@
 <main>
     {% for entry in entries %}
     <article>
-        <a href="{{ entry.link }}" target="_blank" class="article-link">
+        <a href="{{ entry.link }}" target="_blank" style="text-decoration: none; color: inherit; display: block; height: 100%;">
             <div class="meta">{{ entry.published }}</div>
             <h2>{{ entry.title }}</h2>
             <div class="content">
@@ -229,6 +163,12 @@
     </article>
     {% endfor %}
 </main>
+
+<footer>
+    <div class="banner-slot">
+        <img src="https://ppc-master.jp/labo/wp-content/uploads/2025/04/a642966d6dc6fda30ced5fa22a0c4f4f-e1744876154340.jpg" alt="Banner" style="max-height: 100%;">
+    </div>
+</footer>
 
 </body>
 </html>
