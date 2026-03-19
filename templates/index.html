@@ -31,34 +31,31 @@
         }
 
         /* ==========================================================
-           【新設】プログレスバーのスタイル
+           2. プログレスバー (二段階加速)
            ========================================================== */
         #loading-bar-container {
-            writing-mode: horizontal-tb; /* バーは横に走らせる */
+            writing-mode: horizontal-tb;
             position: fixed;
             top: 0; left: 0; width: 100%;
-            height: 4px;
+            height: 3px;
             z-index: 9999;
-            display: none; /* 最初は隠しておく */
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
         }
         #loading-bar {
             width: 0%;
             height: 100%;
-            background-color: #a00; /* 瓦版の赤 */
-            box-shadow: 0 0 10px rgba(170, 0, 0, 0.5);
+            background-color: #a00;
+            box-shadow: 0 0 8px rgba(170, 0, 0, 0.6);
+            transition: width 0.4s cubic-bezier(0.1, 0.5, 0.5, 1);
         }
-
-        /* 5秒かけて90%まで進むアニメーション */
-        @keyframes progress {
-            from { width: 0%; }
-            to { width: 90%; }
-        }
-        .loading-active #loading-bar {
-            animation: progress 5s linear forwards;
+        .is-loading #loading-bar-container {
+            opacity: 1;
         }
 
         /* ==========================================================
-           2. スリムなメニュー
+           3. ナビゲーションメニュー (たてにゅ仕様)
            ========================================================== */
         nav {
             writing-mode: horizontal-tb; 
@@ -71,18 +68,30 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             border-bottom: 1px solid #ddd;
         }
+/* nav .brand をポップなデザインに書き換え */
+nav .brand {
+    display: inline-block;
+    color: #fff; /* 文字色を白に */
+    background-color: #a00; /* 背景を赤に */
+    font-size: 2.2rem; /* 少し大きく */
+    font-weight: 900;
+    padding: 5px 15px;
+    margin: 5px 10px;
+    border-radius: 50px; /* 角を丸めてカプセル型に */
+    white-space: nowrap;
+    /* フォントをゴシック系に変更 */
+    font-family: "Hiragino Maru Gothic ProN", "Yu Gothic", sans-serif;
+    border: 2px solid #a00;
+    box-shadow: 2px 2px 0px #600; /* 立体的な影 */
+    transform: rotate(-3deg); /* わずかに左に傾けてポップさを演出 */
+    text-shadow: 1px 1px 0 #600;
+}
 
-        nav .brand {
-            display: inline-block;
-            color: #a00;
-            font-size: 1.6rem;
-            font-weight: 900;
-            padding: 10px 15px;
-            white-space: nowrap;
-            font-family: "Yu Mincho", serif;
-            border-right: 1px solid #eee;
-        }
-
+/* ついでにホバー（触れた時）の動きも追加 */
+nav .brand:hover {
+    transform: rotate(0deg) scale(1.1); /* まっすぐになって少し大きくなる */
+    transition: 0.2s;
+}
         nav .menu {
             display: flex;
             overflow-x: auto; 
@@ -91,7 +100,6 @@
             flex-grow: 1;
         }
         nav .menu::-webkit-scrollbar { display: none; }
-
         nav .menu a {
             text-decoration: none;
             color: #666;
@@ -99,7 +107,6 @@
             padding: 12px 18px;
             border-bottom: 3px solid transparent;
         }
-
         nav .menu a.active {
             color: #a00;
             font-weight: bold;
@@ -107,7 +114,7 @@
         }
 
         /* ==========================================================
-           3. 紙面レイアウト（PC版）
+           4. 紙面レイアウト
            ========================================================== */
         main { 
             display: grid; 
@@ -119,7 +126,6 @@
             box-sizing: border-box;
             overflow-x: auto;
         }
-        
         article { 
             height: 420px; 
             min-width: 300px; 
@@ -131,7 +137,6 @@
             writing-mode: vertical-rl !important;
             -webkit-writing-mode: vertical-rl !important;
         }
-
         .meta { 
             font-size: 1.4rem; 
             color: #444; 
@@ -139,7 +144,6 @@
             font-weight: bold; 
             font-family: sans-serif; 
         }
-
         h2 { 
             font-size: 3.0rem; 
             line-height: 1.25; 
@@ -147,25 +151,17 @@
             font-weight: 800; 
             padding: 10px 5px; 
             border-right: 3px solid #a00; 
-            writing-mode: vertical-rl !important;
-            -webkit-writing-mode: vertical-rl !important;
         }
-
         .content { 
             font-size: 2.4rem; 
             line-height: 1.7; 
-            display: block !important;
-            writing-mode: vertical-rl !important;
-            -webkit-writing-mode: vertical-rl !important;
-            text-orientation: mixed !important;
             overflow: hidden; 
             height: 100%;
         }
-        
         a.article-link { text-decoration: none; color: inherit; display: block; height: 100%; }
 
         /* ==========================================================
-           4. フッターバナー
+           5. フッターバナー
            ========================================================== */
         footer {
             writing-mode: horizontal-tb;
@@ -177,18 +173,15 @@
             z-index: 1000;
             border-top: 1px solid #ccc;
         }
-
         .banner-slot {
             width: 728px;
             max-width: 95%;
             height: 90px;
-            background-color: #ddd;
-            display: flex; justify-content: center; align-items: center;
             overflow: hidden;
         }
 
         /* ==========================================================
-           5. スマホ用設定
+           6. スマホ用設定
            ========================================================= */
         @media (max-width: 768px) {
             body {
@@ -199,7 +192,6 @@
                 overflow-x: hidden;
                 display: block;
             }
-
             main {
                 display: flex;
                 flex-direction: column; 
@@ -207,7 +199,6 @@
                 height: auto;
                 gap: 50px;
             }
-
             article {
                 writing-mode: vertical-rl !important; 
                 -webkit-writing-mode: vertical-rl !important;
@@ -220,27 +211,13 @@
                 overflow-x: auto;
                 overflow-y: hidden;
             }
-
-            h2 { 
-                font-size: 2.6rem; 
-                height: 450px !important; 
-                margin: 0 !important; 
-                box-sizing: border-box;
-            }
-            .content { 
-                font-size: 2.1rem;
-                height: 450px !important; 
-                margin: 0 !important; 
-                padding: 0 10px;
-                box-sizing: border-box;
-            }
-
+            h2, .content { height: 450px !important; }
             .banner-slot { height: 60px; }
             footer { padding: 5px 0; }
         }
     </style>
 </head>
-<body>
+<body id="page-body">
 
 <div id="loading-bar-container">
     <div id="loading-bar"></div>
@@ -248,19 +225,18 @@
 
 <nav>
     <div class="brand">たてにゅ</div>
-<div class="menu" id="category-menu">
-    <a href="/?cat=top" class="{% if current_cat == 'top' %}active{% endif %}">トップ</a>
-    <a href="/?cat=japan" class="{% if current_cat == 'japan' %}active{% endif %}">日本</a>
-    <a href="/?cat=world" class="{% if current_cat == 'world' %}active{% endif %}">世界</a>
-    <a href="/?cat=business" class="{% if current_cat == 'business' %}active{% endif %}">ビジネス</a>
-    <a href="/?cat=technology" class="{% if current_cat == 'technology' %}active{% endif %}">科学技術</a>
-    <a href="/?cat=entertainment" class="{% if current_cat == 'entertainment' %}active{% endif %}">エンタメ</a>
-    <a href="/?cat=sports" class="{% if current_cat == 'sports' %}active{% endif %}">スポーツ</a>
-    <a href="/?cat=science" class="{% if current_cat == 'science' %}active{% endif %}">科学</a>
-    
-    <a href="/?cat=yahoo_main" class="{% if current_cat == 'yahoo_main' %}active{% endif %}">Y!主要</a>
-    <a href="/?cat=yahoo_biz" class="{% if current_cat == 'yahoo_biz' %}active{% endif %}">Y!経済</a>
-</div>
+    <div class="menu" id="category-menu">
+        <a href="/?cat=top" class="{% if current_cat == 'top' %}active{% endif %}">トップ</a>
+        <a href="/?cat=japan" class="{% if current_cat == 'japan' %}active{% endif %}">日本</a>
+        <a href="/?cat=world" class="{% if current_cat == 'world' %}active{% endif %}">世界</a>
+        <a href="/?cat=business" class="{% if current_cat == 'business' %}active{% endif %}">ビジネス</a>
+        <a href="/?cat=technology" class="{% if current_cat == 'technology' %}active{% endif %}">科学技術</a>
+        <a href="/?cat=entertainment" class="{% if current_cat == 'entertainment' %}active{% endif %}">エンタメ</a>
+        <a href="/?cat=sports" class="{% if current_cat == 'sports' %}active{% endif %}">スポーツ</a>
+        <a href="/?cat=science" class="{% if current_cat == 'science' %}active{% endif %}">科学</a>
+        <a href="/?cat=yahoo_main" class="{% if current_cat == 'yahoo_main' %}active{% endif %}">Y!主要</a>
+        <a href="/?cat=yahoo_biz" class="{% if current_cat == 'yahoo_biz' %}active{% endif %}">Y!経済</a>
+    </div>
 </nav>
 
 <main>
@@ -280,7 +256,7 @@
 <footer>
     <div class="banner-slot">
         <a href="https://amzn.to/4se5ZlG" target="_blank" rel="noopener noreferrer" style="display: block; width: 100%; height: 100%;">
-                      <img src="https://m.media-amazon.com/images/G/09/2026/x-site/SS_HVE2/n7QRJu4/03_ccm/SS26_Final_CCM_007_LUDO_DisplayAds_DTMB_1200x628.jpg"
+            <img src="https://ppc-master.jp/labo/wp-content/uploads/2025/04/a642966d6dc6fda30ced5fa22a0c4f4f-e1744876154340.jpg" 
                  alt="広告バナー" 
                  style="max-height: 100%; width: auto; display: block; margin: 0 auto;">
         </a>
@@ -290,12 +266,16 @@
 <script>
     document.querySelectorAll('#category-menu a').forEach(link => {
         link.addEventListener('click', function() {
-            // バーを表示してアニメーションを開始させる
-            const container = document.getElementById('loading-bar-container');
-            container.style.display = 'block';
-            container.classList.add('loading-active');
+            if (document.body.classList.contains('is-loading')) return;
+            const bar = document.getElementById('loading-bar');
+            const body = document.getElementById('page-body');
+            body.classList.add('is-loading');
             
-            // クリックしたリンクを少し透明にして「読み込み中感」を出す（おまけ）
+            setTimeout(() => { bar.style.width = '25%'; }, 10);
+            setTimeout(() => {
+                bar.style.transition = 'width 5s cubic-bezier(0.1, 0.5, 0.5, 1)';
+                bar.style.width = '85%';
+            }, 200);
             this.style.opacity = '0.5';
         });
     });
