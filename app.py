@@ -59,10 +59,10 @@ def index():
     feed = feedparser.parse(rss_url)
     
     # --- 記事数を 6件（またはお好み）に戻す ---
-    raw_entries = feed.entries[:8]
+    raw_entries = feed.entries[:6]
     
     # 並列処理の数も 5 くらいまでなら戻しても大丈夫です
-    with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
         entries = list(executor.map(fetch_article_content, raw_entries))
         
     return render_template('index.html', entries=entries, current_cat=cat_key)
