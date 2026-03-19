@@ -8,79 +8,213 @@
       gtag('js', new Date());
       gtag('config', 'G-JWK7G9KJRR');
     </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>網上瓦版 - 縦書き電子版</title>
     <style>
+        /* ==========================================================
+           1. 全体設定
+           ========================================================== */
         html { font-size: 50%; }
         body { 
-            background-color: #f0ede4; color: #222; 
-            font-family: "Yu Mincho", serif; margin: 0; padding: 0; 
-            writing-mode: vertical-rl; -webkit-writing-mode: vertical-rl;
-            height: 100vh; display: flex; flex-direction: row; 
+            background-color: #f0ede4; 
+            color: #222; 
+            font-family: "Yu Mincho", "MS PMincho", serif; 
+            margin: 0; 
+            padding: 0; 
+            writing-mode: vertical-rl; 
+            -webkit-writing-mode: vertical-rl;
+            height: 100vh; 
+            display: flex;
+            flex-direction: row; 
         }
+
+        /* ==========================================================
+           2. スリムなメニュー
+           ========================================================== */
         nav {
-            writing-mode: horizontal-tb; position: fixed;
-            top: 0; left: 0; width: 100%; background-color: #fff; 
-            display: flex; align-items: center; z-index: 1000;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-bottom: 1px solid #ddd;
+            writing-mode: horizontal-tb; 
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            background-color: #fff; 
+            display: flex;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-bottom: 1px solid #ddd;
         }
+
         nav .brand {
-            color: #a00; font-size: 1.6rem; font-weight: 900;
-            padding: 10px 15px; border-right: 1px solid #eee;
+            display: inline-block;
+            color: #a00;
+            font-size: 1.6rem;
+            font-weight: 900;
+            padding: 10px 15px;
+            white-space: nowrap;
+            font-family: "Yu Mincho", serif;
+            border-right: 1px solid #eee;
         }
-        nav .menu { display: flex; overflow-x: auto; flex-grow: 1; }
+
+        nav .menu {
+            display: flex;
+            overflow-x: auto; 
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+            flex-grow: 1;
+        }
         nav .menu::-webkit-scrollbar { display: none; }
+
         nav .menu a {
-            text-decoration: none; color: #666; font-size: 1.4rem;
-            padding: 12px 18px; border-bottom: 3px solid transparent;
+            text-decoration: none;
+            color: #666;
+            font-size: 1.4rem;
+            padding: 12px 18px;
+            border-bottom: 3px solid transparent;
         }
-        nav .menu a.active { color: #a00; font-weight: bold; border-bottom: 3px solid #a00; }
 
+        nav .menu a.active {
+            color: #a00;
+            font-weight: bold;
+            border-bottom: 3px solid #a00;
+        }
+
+        /* ==========================================================
+           3. 紙面レイアウト（PC版）
+           ========================================================== */
         main { 
-            display: grid; grid-template-rows: repeat(2, 1fr); 
-            grid-auto-flow: column; gap: 35px; 
-            padding: 65px 30px 120px 30px; height: 100vh; 
-            box-sizing: border-box; overflow-x: auto;
+            display: grid; 
+            grid-template-rows: repeat(2, 1fr); 
+            grid-auto-flow: column; 
+            gap: 35px; 
+            padding: 65px 30px 120px 30px; 
+            height: 100vh; 
+            box-sizing: border-box;
+            overflow-x: auto;
         }
-/* おすすめの調整：記事の左側の余白を消してスッキリさせる */
-article { 
-    height: 420px; 
-    min-width: 300px; 
-    border-left: 1px solid #999; 
-    padding-left: 20px; /* 画像用スペースを20px程度に戻す */
-    display: flex; 
-    flex-direction: column; 
-    position: relative; 
-}
-        .meta { font-size: 1.4rem; color: #444; margin-bottom: 12px; font-weight: bold; }
         
-        .article-image {
-            writing-mode: horizontal-tb; position: absolute;
-            top: 65px; left: 20px; width: 120px; height: 90px;
-            overflow: hidden; border: 2px solid #ccc; background-color: #fff;
+        article { 
+            height: 420px; 
+            min-width: 300px; 
+            border-left: 1px solid #999; 
+            padding-left: 20px; /* 画像用余白を削除し、スッキリさせました */
+            display: flex; 
+            flex-direction: column; 
+            position: relative; 
+            writing-mode: vertical-rl !important;
+            -webkit-writing-mode: vertical-rl !important;
         }
-        .article-image img { width: 100%; height: 100%; object-fit: cover; filter: sepia(40%); }
 
-        h2 { font-size: 3.0rem; line-height: 1.25; margin: 0 0 15px 0; border-right: 3px solid #a00; padding: 10px 5px; }
-        .content { font-size: 2.4rem; line-height: 1.7; overflow: hidden; height: 100%; }
+        .meta { 
+            font-size: 1.4rem; 
+            color: #444; 
+            margin-bottom: 12px; 
+            font-weight: bold; 
+            font-family: sans-serif; 
+        }
+
+        h2 { 
+            font-size: 3.0rem; 
+            line-height: 1.25; 
+            margin: 0 0 15px 0; 
+            font-weight: 800; 
+            padding: 10px 5px; 
+            border-right: 3px solid #a00; 
+            writing-mode: vertical-rl !important;
+            -webkit-writing-mode: vertical-rl !important;
+        }
+
+        .content { 
+            font-size: 2.4rem; 
+            line-height: 1.7; 
+            display: block !important;
+            writing-mode: vertical-rl !important;
+            -webkit-writing-mode: vertical-rl !important;
+            text-orientation: mixed !important;
+            overflow: hidden; 
+            height: 100%;
+        }
         
+        a.article-link { text-decoration: none; color: inherit; display: block; height: 100%; }
+
+        /* ==========================================================
+           4. フッターバナー
+           ========================================================== */
         footer {
-            writing-mode: horizontal-tb; position: fixed; bottom: 0; left: 0; width: 100%;
-            background-color: #eee; padding: 10px 0; display: flex; justify-content: center; z-index: 1000;
+            writing-mode: horizontal-tb;
+            position: fixed;
+            bottom: 0; left: 0; width: 100%;
+            background-color: #eee;
+            padding: 10px 0;
+            display: flex; justify-content: center; align-items: center;
+            z-index: 1000;
+            border-top: 1px solid #ccc;
         }
-        .banner-slot { width: 728px; max-width: 95%; height: 90px; overflow: hidden; }
 
+        .banner-slot {
+            width: 728px;
+            max-width: 95%;
+            height: 90px;
+            background-color: #ddd;
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden;
+        }
+
+        /* ==========================================================
+           5. スマホ用設定
+           ========================================================= */
         @media (max-width: 768px) {
-            body { writing-mode: horizontal-tb; display: block; height: auto; }
-            main { display: flex; flex-direction: column; padding: 60px 15px 120px 15px; gap: 50px; }
-            article { writing-mode: vertical-rl !important; height: 450px !important; padding: 0 15px 0 140px; border-right: 3px solid #a00; border-left: none; }
-            .article-image { top: 40px; left: 10px; width: 110px; height: 80px; }
-            h2, .content { height: 450px !important; }
+            body {
+                writing-mode: horizontal-tb; 
+                -webkit-writing-mode: horizontal-tb;
+                height: auto;
+                overflow-y: auto;
+                overflow-x: hidden;
+                display: block;
+            }
+
+            main {
+                display: flex;
+                flex-direction: column; 
+                padding: 60px 15px 120px 15px; 
+                height: auto;
+                gap: 50px;
+            }
+
+            article {
+                writing-mode: vertical-rl !important; 
+                -webkit-writing-mode: vertical-rl !important;
+                height: 450px !important; 
+                width: 100%;
+                display: block !important;
+                border-left: none;
+                border-right: 3px solid #a00;
+                padding: 0 15px 0 0; /* 画像用の横余白を削除 */
+                overflow-x: auto;
+                overflow-y: hidden;
+            }
+
+            h2 { 
+                font-size: 2.6rem; 
+                height: 450px !important; 
+                margin: 0 !important; 
+                box-sizing: border-box;
+            }
+            .content { 
+                font-size: 2.1rem;
+                height: 450px !important; 
+                margin: 0 !important; 
+                padding: 0 10px;
+                box-sizing: border-box;
+            }
+
+            .banner-slot { height: 60px; }
+            footer { padding: 5px 0; }
         }
     </style>
 </head>
 <body>
+
 <nav>
     <div class="brand">網上瓦版</div>
     <div class="menu">
@@ -94,31 +228,31 @@ article {
         <a href="/?cat=science" class="{% if current_cat == 'science' %}active{% endif %}">科学</a>
     </div>
 </nav>
+
 <main>
     {% for entry in entries %}
     <article>
-        <a href="{{ entry.link }}" target="_blank" style="text-decoration:none; color:inherit; display:block; height:100%;">
+        <a href="{{ entry.link }}" target="_blank" class="article-link">
             <div class="meta">{{ entry.published }}</div>
-<div class="article-image">
-    {% if entry.top_image_url %}
-        <img src="{{ entry.top_image_url }}" alt="記事画像" referrerpolicy="no-referrer">
-    {% else %}
-        <img src="https://i.imgur.com/8N7zUvX.png" alt="網上瓦版" style="opacity: 0.5;">
-    {% endif %}
-</div>
+            
             <h2>{{ entry.title }}</h2>
-            <div class="content">{{ entry.content | safe }}</div>
+            <div class="content">
+                {{ entry.content | safe }}
+            </div>
         </a>
     </article>
     {% endfor %}
 </main>
+
 <footer>
     <div class="banner-slot">
-        <a href="https://amzn.to/4se5ZlG" target="_blank" rel="noopener noreferrer">
-           <img src="https://m.media-amazon.com/images/G/09/2026/x-site/SS_HVE2/n7QRJu4/03_ccm/SS26_Final_CCM_007_LUDO_DisplayAds_DTMB_1200x628.jpg"
-                alt="広告" style="max-height:100%; margin:0 auto; display:block;">
+        <a href="https://amzn.to/4se5ZlG" target="_blank" rel="noopener noreferrer" style="display: block; width: 100%; height: 100%;">
+            <img src="https://ppc-master.jp/labo/wp-content/uploads/2025/04/a642966d6dc6fda30ced5fa22a0c4f4f-e1744876154340.jpg" 
+                 alt="広告バナー" 
+                 style="max-height: 100%; width: auto; display: block; margin: 0 auto;">
         </a>
     </div>
 </footer>
+
 </body>
 </html>
