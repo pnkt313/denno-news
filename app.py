@@ -6,19 +6,21 @@ import concurrent.futures
 import re
 import nltk
 
-# --- NLTKデータの保存先を明示 ---
+# --- NLTKデータの保存先を設定（Renderでの権限エラー防止） ---
 nltk_data_path = os.path.join(os.getcwd(), "nltk_data")
 if not os.path.exists(nltk_data_path):
     os.makedirs(nltk_data_path)
 nltk.data.path.append(nltk_data_path)
 
 try:
+    # newspaper3kに必要なデータをダウンロード
     nltk.data.find('tokenizers/punkt_tab')
 except LookupError:
     nltk.download('punkt_tab', download_dir=nltk_data_path)
 
 app = Flask(__name__)
 
+# カテゴリーとRSS URLの対応表
 CATEGORIES = {
     'top': 'https://news.google.com/news/rss?hl=ja&gl=JP&ceid=JP:ja',
     'japan': 'https://news.google.com/news/rss/headlines/section/topic/NATION?hl=ja&gl=JP&ceid=JP:ja',
@@ -35,35 +37,31 @@ def remove_html_tags(text):
     clean = re.compile('<.*?>')
     return re.sub(clean, '', text)
 
-defdef fetch_article_content(entry):
+def fetch_article_content(entry):
     config = Config()
     config.browser_user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
     config.request_timeout = 7
 
-    # --- 1. まずRSSフィード自体から画像URLを探す ---
+    # 1. RSSフィードから画像を優先取得
     top_image_url = None
-    
-    # media_contentタグがある場合
     if 'media_content' in entry:
         top_image_url = entry.media_content[0]['url']
-    # descriptionの中に<img>タグが隠れている場合（正規表現で抽出）
     elif 'description' in entry:
         img_match = re.search(r'<img src="(.*?)"', entry.description)
         if img_match:
             top_image_url = img_match.group(1)
 
     try:
-        # --- 2. RSSに画像がない場合のみ、newspaper3kで解析を試みる ---
         article = Article(entry.link, config=config)
         article.download()
         article.parse()
         
+        # 本文を400文字に制限
         content = article.text[:400].replace('\n', '<br>')
         
         if not top_image_url:
             top_image_url = article.top_image
 
-        # ゴミ取り
         if content.startswith('GE'):
             content = content.replace('GE', '', 1).lstrip()
 
@@ -83,14 +81,13 @@ defdef fetch_article_content(entry):
             'link': entry.link, 
             'published': getattr(entry, 'published', ''), 
             'content': remove_html_tags(getattr(entry, 'summary', '')),
-            'top_image_url': top_image_url # RSSで見つかっていればそれを使う
+            'top_image_url': top_image_url
         }
 
 @app.route('/')
 def index():
     cat_key = request.args.get('cat', 'top')
     rss_url = CATEGORIES.get(cat_key, CATEGORIES['top'])
-    
     feed = feedparser.parse(rss_url)
     raw_entries = feed.entries[:6]
     
@@ -100,4 +97,5 @@ def index():
     return render_template('index.html', entries=entries, current_cat=cat_key)
 
 if __name__ == '__main__':
+    # Renderではポート5000（または環境変数）で待機
     app.run(debug=True, host='0.0.0.0', port=5000)
