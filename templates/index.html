@@ -263,11 +263,13 @@
         <a href="{{ entry.link }}" target="_blank" class="article-link">
             <div class="meta">{{ entry.published }}</div>
             
-            {% if entry.top_image_url %}
             <div class="article-image">
-                <img src="{{ entry.top_image_url }}" alt="記事画像">
+                {% if entry.top_image_url %}
+                    <img src="{{ entry.top_image_url }}" alt="記事画像">
+                {% else %}
+                    <img src="https://i.imgur.com/8N7zUvX.png" alt="網上瓦版" style="opacity: 0.5;">
+                {% endif %}
             </div>
-            {% endif %}
 
             <h2>{{ entry.title }}</h2>
             <div class="content">
