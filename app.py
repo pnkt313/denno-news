@@ -6,7 +6,7 @@ import concurrent.futures
 import re
 import nltk
 
-# --- NLTKデータの保存先を明示（Render対策） ---
+# --- NLTKデータの保存先を明示 ---
 nltk_data_path = os.path.join(os.getcwd(), "nltk_data")
 if not os.path.exists(nltk_data_path):
     os.makedirs(nltk_data_path)
@@ -37,18 +37,29 @@ def remove_html_tags(text):
 
 def fetch_article_content(entry):
     config = Config()
-    config.browser_user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-    config.request_timeout = 5
+    # ブラウザからのアクセスに見せかける設定を強化
+    config.browser_user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
+    config.request_timeout = 10 # タイムアウトを少し伸ばす
 
     try:
         article = Article(entry.link, config=config)
         article.download()
         article.parse()
+        
+        # 本文の抽出（400文字）
         content = article.text[:400].replace('\n', '<br>')
-
-# 修正箇所2：記事の画像URLを取得
-        # (画像がない場合はNoneを返すように newspaper3k の top_image を利用)
-        top_image_url = article.top_image if article.top_image else None
+        
+        # --- 画像取得ロジックの強化 ---
+        # 1. まず代表画像を探す
+        top_image_url = article.top_image
+        
+        # 2. 代表画像がない場合、記事内の画像リストから最初の一つを探す
+        if not top_image_url and article.images:
+            for img in article.images:
+                # 広告やアイコンっぽい小さい画像を除外（簡易判定）
+                if "icon" not in img.lower() and "logo" not in img.lower():
+                    top_image_url = img
+                    break
         
         # ゴミ取り
         if content.startswith('GE'):
@@ -57,22 +68,21 @@ def fetch_article_content(entry):
         if not content or len(content) < 30:
             content = remove_html_tags(getattr(entry, 'summary', ''))
         
-    # 修正箇所3：戻り値の辞書に画像を追記
         return {
             'title': entry.title, 
             'link': entry.link, 
             'published': getattr(entry, 'published', ''), 
             'content': content,
-            'top_image_url': top_image_url # 画像を追加
+            'top_image_url': top_image_url
         }
-    except:
-        # エラー発生時用のフォールバックにもNoneを追記
+    except Exception as e:
+        print(f"Error fetching {entry.link}: {e}") # ログでエラーを確認できるように
         return {
             'title': entry.title, 
             'link': entry.link, 
             'published': getattr(entry, 'published', ''), 
             'content': remove_html_tags(getattr(entry, 'summary', '')),
-            'top_image_url': None # 画像はなし
+            'top_image_url': None
         }
 
 @app.route('/')
@@ -89,5 +99,4 @@ def index():
     return render_template('index.html', entries=entries, current_cat=cat_key)
 
 if __name__ == '__main__':
-    # Renderではポート5000（または環境変数）でOK
     app.run(debug=True, host='0.0.0.0', port=5000)
