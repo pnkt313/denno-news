@@ -27,7 +27,7 @@ def remove_html_tags(text):
 def fetch_article_content(entry):
     config = Config()
     config.browser_user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-    # タイムアウトを3秒に。Renderの30秒制限に余裕を持たせます
+    # タイムアウトは3秒のままが安全です（遅いサイトを早めに切り捨てるため）
     config.request_timeout = 3 
     config.fetch_images = False
 
@@ -42,8 +42,6 @@ def fetch_article_content(entry):
         if not content or len(content) < 20:
             content = rss_summary
     except Exception as e:
-        # エラー時はログに出力（Renderのログで見れます）
-        print(f"Error fetching {entry.link}: {e}")
         content = rss_summary if rss_summary else "本文を取得できませんでした。"
         
     return {
@@ -59,11 +57,12 @@ def index():
     rss_url = CATEGORIES.get(cat_key, CATEGORIES['top'])
     
     feed = feedparser.parse(rss_url)
-    # 最初は確認のため4記事に絞る
-    raw_entries = feed.entries[:4]
     
-    # Renderの負荷を考え、並列数を2に下げる
-    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+    # --- 記事数を 6件（またはお好み）に戻す ---
+    raw_entries = feed.entries[:6]
+    
+    # 並列処理の数も 5 くらいまでなら戻しても大丈夫です
+    with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
         entries = list(executor.map(fetch_article_content, raw_entries))
         
     return render_template('index.html', entries=entries, current_cat=cat_key)
