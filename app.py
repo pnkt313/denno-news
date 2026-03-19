@@ -8,6 +8,7 @@ from newspaper import Article, Config
 app = Flask(__name__)
 
 # カテゴリーとGoogleニュースRSS
+# app.py の CATEGORIES 部分を以下に書き換え
 CATEGORIES = {
     'top': 'https://news.google.com/news/rss?hl=ja&gl=JP&ceid=JP:ja',
     'japan': 'https://news.google.com/news/rss/headlines/section/topic/NATION?hl=ja&gl=JP&ceid=JP:ja',
@@ -16,7 +17,10 @@ CATEGORIES = {
     'technology': 'https://news.google.com/news/rss/headlines/section/topic/TECHNOLOGY?hl=ja&gl=JP&ceid=JP:ja',
     'entertainment': 'https://news.google.com/news/rss/headlines/section/topic/ENTERTAINMENT?hl=ja&gl=JP&ceid=JP:ja',
     'sports': 'https://news.google.com/news/rss/headlines/section/topic/SPORTS?hl=ja&gl=JP&ceid=JP:ja',
-    'science': 'https://news.google.com/news/rss/headlines/section/topic/SCIENCE?hl=ja&gl=JP&ceid=JP:ja'
+    'science': 'https://news.google.com/news/rss/headlines/section/topic/SCIENCE?hl=ja&gl=JP&ceid=JP:ja',
+    # --- ヤフーニュースを追加 ---
+    'yahoo_main': 'https://news.yahoo.co.jp/rss/topics/top-picks.xml',
+    'yahoo_biz': 'https://news.yahoo.co.jp/rss/topics/business.xml'
 }
 
 def remove_html_tags(text):
