@@ -31,34 +31,32 @@
         }
 
         /* ==========================================================
-           【新設】プログレスバーのスタイル
+           2. プログレスバー (スマホ対応・滑らか版)
            ========================================================== */
         #loading-bar-container {
-            writing-mode: horizontal-tb; /* バーは横に走らせる */
+            writing-mode: horizontal-tb;
             position: fixed;
             top: 0; left: 0; width: 100%;
             height: 4px;
             z-index: 9999;
-            display: none; /* 最初は隠しておく */
+            opacity: 0; /* display:none の代わりに透明度で制御 */
+            pointer-events: none;
+            transition: opacity 0.2s ease;
         }
         #loading-bar {
             width: 0%;
             height: 100%;
-            background-color: #a00; /* 瓦版の赤 */
+            background-color: #a00;
             box-shadow: 0 0 10px rgba(170, 0, 0, 0.5);
+            /* animation ではなく transition を使うことでスマホでも滑らかに */
+            transition: width 0.4s cubic-bezier(0.1, 0.5, 0.5, 1);
         }
-
-        /* 5秒かけて90%まで進むアニメーション */
-        @keyframes progress {
-            from { width: 0%; }
-            to { width: 90%; }
-        }
-        .loading-active #loading-bar {
-            animation: progress 5s linear forwards;
+        .is-loading #loading-bar-container {
+            opacity: 1;
         }
 
         /* ==========================================================
-           2. スリムなメニュー
+           3. ナビゲーションメニュー
            ========================================================== */
         nav {
             writing-mode: horizontal-tb; 
@@ -72,6 +70,7 @@
             border-bottom: 1px solid #ddd;
         }
 
+        /* ロゴスタイルを「ポップにする前」のシンプル版に戻しました */
         nav .brand {
             display: inline-block;
             color: #a00;
@@ -107,7 +106,7 @@
         }
 
         /* ==========================================================
-           3. 紙面レイアウト（PC版）
+           4. 紙面レイアウト (PC版)
            ========================================================== */
         main { 
             display: grid; 
@@ -165,7 +164,7 @@
         a.article-link { text-decoration: none; color: inherit; display: block; height: 100%; }
 
         /* ==========================================================
-           4. フッターバナー
+           5. フッターバナー
            ========================================================== */
         footer {
             writing-mode: horizontal-tb;
@@ -188,7 +187,7 @@
         }
 
         /* ==========================================================
-           5. スマホ用設定
+           6. スマホ用設定
            ========================================================= */
         @media (max-width: 768px) {
             body {
@@ -248,19 +247,19 @@
 
 <nav>
     <div class="brand">たてにゅ</div>
-<div class="menu" id="category-menu">
-    <a href="/?cat=top" class="{% if current_cat == 'top' %}active{% endif %}">トップ</a>
-    <a href="/?cat=japan" class="{% if current_cat == 'japan' %}active{% endif %}">日本</a>
-    <a href="/?cat=world" class="{% if current_cat == 'world' %}active{% endif %}">世界</a>
-    <a href="/?cat=business" class="{% if current_cat == 'business' %}active{% endif %}">ビジネス</a>
-    <a href="/?cat=technology" class="{% if current_cat == 'technology' %}active{% endif %}">科学技術</a>
-    <a href="/?cat=entertainment" class="{% if current_cat == 'entertainment' %}active{% endif %}">エンタメ</a>
-    <a href="/?cat=sports" class="{% if current_cat == 'sports' %}active{% endif %}">スポーツ</a>
-    <a href="/?cat=science" class="{% if current_cat == 'science' %}active{% endif %}">科学</a>
-    
-    <a href="/?cat=yahoo_main" class="{% if current_cat == 'yahoo_main' %}active{% endif %}">Y!主要</a>
-    <a href="/?cat=yahoo_biz" class="{% if current_cat == 'yahoo_biz' %}active{% endif %}">Y!経済</a>
-</div>
+    <div class="menu" id="category-menu">
+        <a href="/?cat=top" class="{% if current_cat == 'top' %}active{% endif %}">トップ</a>
+        <a href="/?cat=japan" class="{% if current_cat == 'japan' %}active{% endif %}">日本</a>
+        <a href="/?cat=world" class="{% if current_cat == 'world' %}active{% endif %}">世界</a>
+        <a href="/?cat=business" class="{% if current_cat == 'business' %}active{% endif %}">ビジネス</a>
+        <a href="/?cat=technology" class="{% if current_cat == 'technology' %}active{% endif %}">科学技術</a>
+        <a href="/?cat=entertainment" class="{% if current_cat == 'entertainment' %}active{% endif %}">エンタメ</a>
+        <a href="/?cat=sports" class="{% if current_cat == 'sports' %}active{% endif %}">スポーツ</a>
+        <a href="/?cat=science" class="{% if current_cat == 'science' %}active{% endif %}">科学</a>
+        
+        <a href="/?cat=yahoo_main" class="{% if current_cat == 'yahoo_main' %}active{% endif %}">Y!主要</a>
+        <a href="/?cat=yahoo_biz" class="{% if current_cat == 'yahoo_biz' %}active{% endif %}">Y!経済</a>
+    </div>
 </nav>
 
 <main>
@@ -280,7 +279,7 @@
 <footer>
     <div class="banner-slot">
         <a href="https://amzn.to/4se5ZlG" target="_blank" rel="noopener noreferrer" style="display: block; width: 100%; height: 100%;">
-                      <img src="https://m.media-amazon.com/images/G/09/2026/x-site/SS_HVE2/n7QRJu4/03_ccm/SS26_Final_CCM_007_LUDO_DisplayAds_DTMB_1200x628.jpg"
+            <img src="https://m.media-amazon.com/images/G/09/2026/x-site/SS_HVE2/n7QRJu4/03_ccm/SS26_Final_CCM_007_LUDO_DisplayAds_DTMB_1200x628.jpg"
                  alt="広告バナー" 
                  style="max-height: 100%; width: auto; display: block; margin: 0 auto;">
         </a>
@@ -290,12 +289,25 @@
 <script>
     document.querySelectorAll('#category-menu a').forEach(link => {
         link.addEventListener('click', function() {
-            // バーを表示してアニメーションを開始させる
-            const container = document.getElementById('loading-bar-container');
-            container.style.display = 'block';
-            container.classList.add('loading-active');
+            if (document.body.classList.contains('is-loading')) return;
+
+            const bar = document.getElementById('loading-bar');
+            const body = document.body;
+
+            // バーを表示（透明度を1にする）
+            body.classList.add('is-loading');
             
-            // クリックしたリンクを少し透明にして「読み込み中感」を出す（おまけ）
+            // クリックした瞬間に25%まで飛ばす
+            setTimeout(() => {
+                bar.style.width = '25%';
+            }, 10);
+
+            // 5秒かけてじわじわ85%まで伸ばす
+            setTimeout(() => {
+                bar.style.transition = 'width 5s cubic-bezier(0.1, 0.5, 0.5, 1)';
+                bar.style.width = '85%';
+            }, 200);
+
             this.style.opacity = '0.5';
         });
     });
