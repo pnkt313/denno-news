@@ -36,37 +36,39 @@ def remove_html_tags(text):
     return re.sub(clean, '', text)
 
 def fetch_article_content(entry):
-    # --- ロジック変更：まずRSSの description 内にある <img> タグを探す ---
     top_image_url = None
-    description = entry.get('description', '')
     
-    # 正規表現で <img src="..."> を抽出（GoogleニュースRSSの画像はここにあることが多い）
-    img_match = re.search(r'<img src="(.*?)"', description)
-    if img_match:
-        top_image_url = img_match.group(1)
-        # Googleの画像はサイズが小さい場合があるため、URLを置換して大きくできる場合もあるが、まずはそのまま取得
+    # --- 【重要】RSSの全フィールドから画像URLを力技で探す ---
+    # 探す対象：summary, description, media_content
+    search_text = entry.get('summary', '') + entry.get('description', '')
+    
+    # 1. media_contentタグをチェック
+    if 'media_content' in entry:
+        top_image_url = entry.media_content[0]['url']
+    
+    # 2. summaryやdescriptionの中の<img>タグを正規表現で探す
+    if not top_image_url:
+        img_match = re.search(r'src="([^"]+)"', search_text)
+        if img_match:
+            top_image_url = img_match.group(1)
 
     config = Config()
     config.browser_user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
-    config.request_timeout = 8
+    config.request_timeout = 5 # 読み込みを速くするために短縮
 
     try:
+        # 記事本文の取得（文字数400制限）
         article = Article(entry.link, config=config)
         article.download()
         article.parse()
-        
-        # 本文400文字
         content = article.text[:400].replace('\n', '<br>')
-        
-        # RSSで画像が取れなかった場合のみ、解析結果から取得
-        if not top_image_url:
-            top_image_url = article.top_image if article.top_image else article.meta_img
 
-        # ゴミ取り
-        if content.startswith('GE'):
-            content = content.replace('GE', '', 1).lstrip()
+        # それでも画像がなければ解析結果から
+        if not top_image_url:
+            top_image_url = article.top_image
+
         if not content or len(content) < 30:
-            content = remove_html_tags(description)
+            content = remove_html_tags(search_text)
         
         return {
             'title': entry.title, 
@@ -80,7 +82,7 @@ def fetch_article_content(entry):
             'title': entry.title, 
             'link': entry.link, 
             'published': getattr(entry, 'published', ''), 
-            'content': remove_html_tags(description),
+            'content': remove_html_tags(search_text),
             'top_image_url': top_image_url
         }
 
