@@ -45,6 +45,10 @@ def fetch_article_content(entry):
         article.download()
         article.parse()
         content = article.text[:400].replace('\n', '<br>')
+
+# 修正箇所2：記事の画像URLを取得
+        # (画像がない場合はNoneを返すように newspaper3k の top_image を利用)
+        top_image_url = article.top_image if article.top_image else None
         
         # ゴミ取り
         if content.startswith('GE'):
@@ -53,18 +57,22 @@ def fetch_article_content(entry):
         if not content or len(content) < 30:
             content = remove_html_tags(getattr(entry, 'summary', ''))
         
+    # 修正箇所3：戻り値の辞書に画像を追記
         return {
             'title': entry.title, 
             'link': entry.link, 
             'published': getattr(entry, 'published', ''), 
-            'content': content
+            'content': content,
+            'top_image_url': top_image_url # 画像を追加
         }
     except:
+        # エラー発生時用のフォールバックにもNoneを追記
         return {
             'title': entry.title, 
             'link': entry.link, 
             'published': getattr(entry, 'published', ''), 
-            'content': remove_html_tags(getattr(entry, 'summary', ''))
+            'content': remove_html_tags(getattr(entry, 'summary', '')),
+            'top_image_url': None # 画像はなし
         }
 
 @app.route('/')
