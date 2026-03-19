@@ -35,32 +35,34 @@ def remove_html_tags(text):
     clean = re.compile('<.*?>')
     return re.sub(clean, '', text)
 
-def fetch_article_content(entry):
+defdef fetch_article_content(entry):
     config = Config()
-    # ブラウザからのアクセスに見せかける設定を強化
-    config.browser_user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
-    config.request_timeout = 10 # タイムアウトを少し伸ばす
+    config.browser_user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
+    config.request_timeout = 7
+
+    # --- 1. まずRSSフィード自体から画像URLを探す ---
+    top_image_url = None
+    
+    # media_contentタグがある場合
+    if 'media_content' in entry:
+        top_image_url = entry.media_content[0]['url']
+    # descriptionの中に<img>タグが隠れている場合（正規表現で抽出）
+    elif 'description' in entry:
+        img_match = re.search(r'<img src="(.*?)"', entry.description)
+        if img_match:
+            top_image_url = img_match.group(1)
 
     try:
+        # --- 2. RSSに画像がない場合のみ、newspaper3kで解析を試みる ---
         article = Article(entry.link, config=config)
         article.download()
         article.parse()
         
-        # 本文の抽出（400文字）
         content = article.text[:400].replace('\n', '<br>')
         
-        # --- 画像取得ロジックの強化 ---
-        # 1. まず代表画像を探す
-        top_image_url = article.top_image
-        
-        # 2. 代表画像がない場合、記事内の画像リストから最初の一つを探す
-        if not top_image_url and article.images:
-            for img in article.images:
-                # 広告やアイコンっぽい小さい画像を除外（簡易判定）
-                if "icon" not in img.lower() and "logo" not in img.lower():
-                    top_image_url = img
-                    break
-        
+        if not top_image_url:
+            top_image_url = article.top_image
+
         # ゴミ取り
         if content.startswith('GE'):
             content = content.replace('GE', '', 1).lstrip()
@@ -75,14 +77,13 @@ def fetch_article_content(entry):
             'content': content,
             'top_image_url': top_image_url
         }
-    except Exception as e:
-        print(f"Error fetching {entry.link}: {e}") # ログでエラーを確認できるように
+    except:
         return {
             'title': entry.title, 
             'link': entry.link, 
             'published': getattr(entry, 'published', ''), 
             'content': remove_html_tags(getattr(entry, 'summary', '')),
-            'top_image_url': None
+            'top_image_url': top_image_url # RSSで見つかっていればそれを使う
         }
 
 @app.route('/')
