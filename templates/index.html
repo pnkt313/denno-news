@@ -1,16 +1,13 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-JWK7G9KJRR"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-JWK7G9KJRR');
-</script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-JWK7G9KJRR"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-JWK7G9KJRR');
+    </script>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,21 +31,20 @@
         }
 
         /* ==========================================================
-           2. スリムなメニュー（ロゴ固定・横スクロール）
+           2. スリムなメニュー
            ========================================================== */
         nav {
             writing-mode: horizontal-tb; 
             position: fixed;
             top: 0; left: 0; width: 100%;
             background-color: #fff; 
-            display: flex; /* ロゴとメニューを横並びに */
+            display: flex;
             align-items: center;
             z-index: 1000;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             border-bottom: 1px solid #ddd;
         }
 
-        /* 左側に固定されるロゴ */
         nav .brand {
             display: inline-block;
             color: #a00;
@@ -58,7 +54,6 @@
             white-space: nowrap;
             font-family: "Yu Mincho", serif;
             border-right: 1px solid #eee;
-            background-color: #fff;
         }
 
         nav .menu {
@@ -75,10 +70,6 @@
             color: #666;
             font-size: 1.4rem;
             padding: 12px 18px;
-            background-color: transparent;
-            display: inline-block;
-            transition: 0.2s;
-            font-family: sans-serif;
             border-bottom: 3px solid transparent;
         }
 
@@ -96,7 +87,7 @@
             grid-template-rows: repeat(2, 1fr); 
             grid-auto-flow: column; 
             gap: 35px; 
-            padding: 65px 30px 120px 30px; /* 下部バナー分の余白を確保 */
+            padding: 65px 30px 120px 30px; 
             height: 100vh; 
             box-sizing: border-box;
             overflow-x: auto;
@@ -104,25 +95,22 @@
         
         article { 
             height: 420px; 
-            width: auto; 
             min-width: 300px; 
             border-left: 1px solid #999; 
             padding-left: 20px; 
             display: flex; 
             flex-direction: column; 
             position: relative; 
-            writing-mode: vertical-rl;
-            -webkit-writing-mode: vertical-rl;
+            writing-mode: vertical-rl !important;
+            -webkit-writing-mode: vertical-rl !important;
         }
 
-        /* 修正：日時のフォントを大きく */
         .meta { 
             font-size: 1.4rem; 
             color: #444; 
             margin-bottom: 12px; 
             font-weight: bold; 
             font-family: sans-serif; 
-            letter-spacing: 0.05rem;
         }
 
         h2 { 
@@ -130,31 +118,27 @@
             line-height: 1.25; 
             margin: 0 0 15px 0; 
             font-weight: 800; 
-            background: linear-gradient(to bottom, rgba(0,0,0,0.05), transparent); 
             padding: 10px 5px; 
             border-right: 3px solid #a00; 
-            writing-mode: vertical-rl;
-            -webkit-writing-mode: vertical-rl;
+            writing-mode: vertical-rl !important;
+            -webkit-writing-mode: vertical-rl !important;
         }
 
         .content { 
             font-size: 2.4rem; 
             line-height: 1.7; 
-            text-align: justify; 
             display: block !important;
             writing-mode: vertical-rl !important;
             -webkit-writing-mode: vertical-rl !important;
             text-orientation: mixed !important;
-            -webkit-text-orientation: mixed !important;
             overflow: hidden; 
             height: 100%;
         }
         
-        a.article-link { text-decoration: none; color: inherit; display: block; height: 100%; transition: 0.3s; }
-        a:hover { background-color: rgba(255,255,255,0.4); }
+        a.article-link { text-decoration: none; color: inherit; display: block; height: 100%; }
 
         /* ==========================================================
-           4. フッターバナーエリア
+           4. フッターバナー
            ========================================================== */
         footer {
             writing-mode: horizontal-tb;
@@ -173,13 +157,12 @@
             height: 90px;
             background-color: #ddd;
             display: flex; justify-content: center; align-items: center;
-            color: #888; font-size: 1.2rem;
-            border: 1px dashed #bbb;
+            overflow: hidden;
         }
 
         /* ==========================================================
-           5. スマホ用設定（1x6 垂直並び・レイアウト修正済）
-           ========================================================== */
+           5. スマホ用設定
+           ========================================================= */
         @media (max-width: 768px) {
             body {
                 writing-mode: horizontal-tb; 
@@ -193,7 +176,7 @@
             main {
                 display: flex;
                 flex-direction: column; 
-                padding: 60px 15px 120px 15px; /* バナーで記事が隠れないよう下部を広く */
+                padding: 60px 15px 120px 15px; 
                 height: auto;
                 gap: 50px;
             }
@@ -201,17 +184,14 @@
             article {
                 writing-mode: vertical-rl !important; 
                 -webkit-writing-mode: vertical-rl !important;
-                height: 450px !important; /* 見出しと本文の高さを固定して揃える */
+                height: 450px !important; 
                 width: 100%;
-                min-width: 0;
-                overflow-x: auto; 
-                overflow-y: hidden;
+                display: block !important;
                 border-left: none;
                 border-right: 3px solid #a00;
                 padding: 0 15px 0 0;
-                margin: 0;
-                background: rgba(255,255,255,0.2);
-                display: block !important;
+                overflow-x: auto;
+                overflow-y: hidden;
             }
 
             h2 { 
@@ -228,12 +208,7 @@
                 box-sizing: border-box;
             }
 
-            article::after {
-                bottom: -25px;
-                border-bottom: 1px solid #ccc;
-            }
-
-            .banner-slot { height: 60px; font-size: 1.0rem; }
+            .banner-slot { height: 60px; }
             footer { padding: 5px 0; }
         }
     </style>
@@ -272,5 +247,7 @@
     <div class="banner-slot">
          <img src="https://ppc-master.jp/labo/wp-content/uploads/2025/04/a642966d6dc6fda30ced5fa22a0c4f4f-e1744876154340.jpg" alt="Banner" style="max-height: 100%;">
     </div>
-</footer> </body>
+</footer>
+
+</body>
 </html>
