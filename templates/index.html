@@ -11,7 +11,7 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>縦書きニュース「たてにゅう」</title>
+    <title>網上瓦版 - 縦書き電子版</title>
     <style>
         /* ==========================================================
            1. 全体設定
@@ -28,6 +28,33 @@
             height: 100vh; 
             display: flex;
             flex-direction: row; 
+        }
+
+        /* ==========================================================
+           【新設】プログレスバーのスタイル
+           ========================================================== */
+        #loading-bar-container {
+            writing-mode: horizontal-tb; /* バーは横に走らせる */
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            height: 4px;
+            z-index: 9999;
+            display: none; /* 最初は隠しておく */
+        }
+        #loading-bar {
+            width: 0%;
+            height: 100%;
+            background-color: #a00; /* 瓦版の赤 */
+            box-shadow: 0 0 10px rgba(170, 0, 0, 0.5);
+        }
+
+        /* 5秒かけて90%まで進むアニメーション */
+        @keyframes progress {
+            from { width: 0%; }
+            to { width: 90%; }
+        }
+        .loading-active #loading-bar {
+            animation: progress 5s linear forwards;
         }
 
         /* ==========================================================
@@ -97,7 +124,7 @@
             height: 420px; 
             min-width: 300px; 
             border-left: 1px solid #999; 
-            padding-left: 20px; /* 画像用余白を削除し、スッキリさせました */
+            padding-left: 20px; 
             display: flex; 
             flex-direction: column; 
             position: relative; 
@@ -189,7 +216,7 @@
                 display: block !important;
                 border-left: none;
                 border-right: 3px solid #a00;
-                padding: 0 15px 0 0; /* 画像用の横余白を削除 */
+                padding: 0 15px 0 0;
                 overflow-x: auto;
                 overflow-y: hidden;
             }
@@ -215,9 +242,13 @@
 </head>
 <body>
 
+<div id="loading-bar-container">
+    <div id="loading-bar"></div>
+</div>
+
 <nav>
     <div class="brand">網上瓦版</div>
-    <div class="menu">
+    <div class="menu" id="category-menu">
         <a href="/?cat=top" class="{% if current_cat == 'top' %}active{% endif %}">トップ</a>
         <a href="/?cat=japan" class="{% if current_cat == 'japan' %}active{% endif %}">日本</a>
         <a href="/?cat=world" class="{% if current_cat == 'world' %}active{% endif %}">世界</a>
@@ -234,7 +265,6 @@
     <article>
         <a href="{{ entry.link }}" target="_blank" class="article-link">
             <div class="meta">{{ entry.published }}</div>
-            
             <h2>{{ entry.title }}</h2>
             <div class="content">
                 {{ entry.content | safe }}
@@ -247,12 +277,26 @@
 <footer>
     <div class="banner-slot">
         <a href="https://amzn.to/4se5ZlG" target="_blank" rel="noopener noreferrer" style="display: block; width: 100%; height: 100%;">
-             <img src="https://m.media-amazon.com/images/G/09/2026/x-site/SS_HVE2/n7QRJu4/03_ccm/SS26_Final_CCM_007_LUDO_DisplayAds_DTMB_1200x628.jpg"
+            <img src="https://ppc-master.jp/labo/wp-content/uploads/2025/04/a642966d6dc6fda30ced5fa22a0c4f4f-e1744876154340.jpg" 
                  alt="広告バナー" 
                  style="max-height: 100%; width: auto; display: block; margin: 0 auto;">
         </a>
     </div>
 </footer>
+
+<script>
+    document.querySelectorAll('#category-menu a').forEach(link => {
+        link.addEventListener('click', function() {
+            // バーを表示してアニメーションを開始させる
+            const container = document.getElementById('loading-bar-container');
+            container.style.display = 'block';
+            container.classList.add('loading-active');
+            
+            // クリックしたリンクを少し透明にして「読み込み中感」を出す（おまけ）
+            this.style.opacity = '0.5';
+        });
+    });
+</script>
 
 </body>
 </html>
