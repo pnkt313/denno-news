@@ -50,17 +50,16 @@
             box-shadow: 0 0 8px rgba(170, 0, 0, 0.6);
             transition: width 0.4s cubic-bezier(0.1, 0.5, 0.5, 1);
         }
-        .is-loading #loading-bar-container {
-            opacity: 1;
-        }
+        .is-loading #loading-bar-container { opacity: 1; }
 
         /* ==========================================================
-           3. ナビゲーションメニュー (たてにゅ仕様)
+           3. ナビゲーションメニュー (ポップなロゴ固定版)
            ========================================================== */
         nav {
             writing-mode: horizontal-tb; 
             position: fixed;
             top: 0; left: 0; width: 100%;
+            height: 55px; /* 高さを固定して安定させます */
             background-color: #fff; 
             display: flex;
             align-items: center;
@@ -68,43 +67,41 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             border-bottom: 1px solid #ddd;
         }
-/* nav .brand をポップなデザインに書き換え */
-nav .brand {
-    display: inline-block;
-    color: #fff; /* 文字色を白に */
-    background-color: #a00; /* 背景を赤に */
-    font-size: 2.2rem; /* 少し大きく */
-    font-weight: 900;
-    padding: 5px 15px;
-    margin: 5px 10px;
-    border-radius: 50px; /* 角を丸めてカプセル型に */
-    white-space: nowrap;
-    /* フォントをゴシック系に変更 */
-    font-family: "Hiragino Maru Gothic ProN", "Yu Gothic", sans-serif;
-    border: 2px solid #a00;
-    box-shadow: 2px 2px 0px #600; /* 立体的な影 */
-    transform: rotate(-3deg); /* わずかに左に傾けてポップさを演出 */
-    text-shadow: 1px 1px 0 #600;
-}
 
-/* ついでにホバー（触れた時）の動きも追加 */
-nav .brand:hover {
-    transform: rotate(0deg) scale(1.1); /* まっすぐになって少し大きくなる */
-    transition: 0.2s;
-}
+        /* ポップなロゴ（レイアウトを壊さないよう調整済み） */
+        nav .brand {
+            display: inline-block;
+            color: #fff;
+            background-color: #a00;
+            font-size: 1.6rem;
+            font-weight: 900;
+            padding: 4px 12px;
+            margin-left: 10px;
+            border-radius: 50px;
+            white-space: nowrap;
+            font-family: "Hiragino Maru Gothic ProN", "Yu Gothic", sans-serif;
+            box-shadow: 1px 1px 0px #600;
+            transform: rotate(-3deg);
+            text-shadow: 1px 1px 0 #600;
+            flex-shrink: 0; /* ロゴが潰れないように */
+        }
+
         nav .menu {
             display: flex;
             overflow-x: auto; 
             white-space: nowrap;
             -webkit-overflow-scrolling: touch;
             flex-grow: 1;
+            height: 100%;
+            align-items: center;
         }
         nav .menu::-webkit-scrollbar { display: none; }
         nav .menu a {
             text-decoration: none;
             color: #666;
             font-size: 1.4rem;
-            padding: 12px 18px;
+            padding: 0 15px;
+            line-height: 55px;
             border-bottom: 3px solid transparent;
         }
         nav .menu a.active {
@@ -121,7 +118,7 @@ nav .brand:hover {
             grid-template-rows: repeat(2, 1fr); 
             grid-auto-flow: column; 
             gap: 35px; 
-            padding: 65px 30px 120px 30px; 
+            padding: 75px 30px 120px 30px; /* 上余白を少し増やしました */
             height: 100vh; 
             box-sizing: border-box;
             overflow-x: auto;
@@ -137,31 +134,13 @@ nav .brand:hover {
             writing-mode: vertical-rl !important;
             -webkit-writing-mode: vertical-rl !important;
         }
-        .meta { 
-            font-size: 1.4rem; 
-            color: #444; 
-            margin-bottom: 12px; 
-            font-weight: bold; 
-            font-family: sans-serif; 
-        }
-        h2 { 
-            font-size: 3.0rem; 
-            line-height: 1.25; 
-            margin: 0 0 15px 0; 
-            font-weight: 800; 
-            padding: 10px 5px; 
-            border-right: 3px solid #a00; 
-        }
-        .content { 
-            font-size: 2.4rem; 
-            line-height: 1.7; 
-            overflow: hidden; 
-            height: 100%;
-        }
+        .meta { font-size: 1.4rem; color: #444; margin-bottom: 12px; font-weight: bold; }
+        h2 { font-size: 3.0rem; line-height: 1.25; margin: 0 0 15px 0; font-weight: 800; border-right: 3px solid #a00; padding: 10px 5px; }
+        .content { font-size: 2.4rem; line-height: 1.7; overflow: hidden; height: 100%; }
         a.article-link { text-decoration: none; color: inherit; display: block; height: 100%; }
 
         /* ==========================================================
-           5. フッターバナー
+           5. フッター
            ========================================================== */
         footer {
             writing-mode: horizontal-tb;
@@ -173,15 +152,10 @@ nav .brand:hover {
             z-index: 1000;
             border-top: 1px solid #ccc;
         }
-        .banner-slot {
-            width: 728px;
-            max-width: 95%;
-            height: 90px;
-            overflow: hidden;
-        }
+        .banner-slot { width: 728px; max-width: 95%; height: 90px; overflow: hidden; }
 
         /* ==========================================================
-           6. スマホ用設定
+           6. スマホ用レイアウト復元
            ========================================================= */
         @media (max-width: 768px) {
             body {
@@ -195,7 +169,7 @@ nav .brand:hover {
             main {
                 display: flex;
                 flex-direction: column; 
-                padding: 60px 15px 120px 15px; 
+                padding: 70px 15px 120px 15px; /* バーとの重なりを防止 */
                 height: auto;
                 gap: 50px;
             }
@@ -213,7 +187,6 @@ nav .brand:hover {
             }
             h2, .content { height: 450px !important; }
             .banner-slot { height: 60px; }
-            footer { padding: 5px 0; }
         }
     </style>
 </head>
