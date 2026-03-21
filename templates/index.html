@@ -108,36 +108,41 @@
         /* ==========================================================
            4. 紙面レイアウト (PC版)
            ========================================================== */
+/* --- main の基本設定（標準：1001px〜1599pxは縦2段） --- */
 main { 
     display: grid; 
-    /* デフォルトは縦2段 */
+    /* デフォルトは縦2段 × 横3列 */
     grid-template-rows: repeat(2, 1fr); 
     grid-auto-flow: column; 
     gap: 35px; 
     padding: 75px 30px 120px 30px; 
     height: 100vh; 
     box-sizing: border-box;
-    overflow-x: auto;
+    overflow-x: auto; /* 横スクロールを許可 */
 }
 
-/* --- 幅が狭いPC版（縦1列にスタック） --- */
+/* --- 【修正】幅が狭いPC版（769px〜1000px：縦1段 × 横6列） --- */
 @media (min-width: 769px) and (max-width: 1000px) {
     main {
+        /* 縦に1つだけ配置＝横一列に並ぶ */
         grid-template-rows: repeat(1, 1fr);
     }
     article {
-        height: auto; /* 縦に並ぶので高さは自動調整 */
-        min-height: 200px;
+        /* 1段なので、高さを画面いっぱいに広げる */
+        height: calc(100vh - 250px); 
+        min-width: 350px;
     }
 }
 
-/* --- 幅が広いPC版（縦3段 × 横2列） --- */
+/* --- 幅が広いPC版（1600px以上：縦3段 × 横2列） --- */
 @media (min-width: 1600px) {
     main {
+        /* 縦に3つ積み上げる */
         grid-template-rows: repeat(3, 1fr);
     }
     article {
-        height: 300px; /* 3段にするため、1つあたりの高さを少し抑える */
+        /* 3段に収まるよう、1つあたりの高さを調整 */
+        height: 280px; 
     }
 }
         
