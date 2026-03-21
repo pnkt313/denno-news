@@ -163,13 +163,13 @@
         /* --- 幅が狭いPC版（769px〜1000px：縦1段） --- */
         @media (min-width: 769px) and (max-width: 1000px) {
             main { grid-template-rows: repeat(1, 1fr); }
-            article { height: calc(100vh - 250px); min-width: 350px; }
+            article { height: 420px; min-width: 350px; }
         }
 
         /* --- 幅が広いPC版（1600px以上：縦3段） --- */
         @media (min-width: 1600px) {
             main { grid-template-rows: repeat(3, 1fr); }
-            article { height: 280px; }
+            article { height: 420px; }
         }
 
         .meta { font-size: 1.4rem; color: #444; margin-bottom: 12px; font-weight: bold; font-family: sans-serif; }
